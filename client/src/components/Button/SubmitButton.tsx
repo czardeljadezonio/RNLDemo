@@ -7,6 +7,7 @@ interface SubmitButtonProps {
   className?: string;
   loading?: boolean;
   loadingLabel?: string;
+  type?: "button" | "submit" | "reset";
 }
 
 const SubmitButton: FC<SubmitButtonProps> = ({
@@ -15,15 +16,16 @@ const SubmitButton: FC<SubmitButtonProps> = ({
   className,
   loading,
   loadingLabel,
+  type = "submit",
 }) => {
   return (
     <>
       <button
-        type="submit"
+        type={type}
         className={`${
           newClassName
             ? newClassName
-            : `px-4 py-3 bg-green-600 hover:bg-green-700 tex-sm font-medium mt-3 cursor-pointer text-white rounded-lg shadow-lg ${className}`
+            : `px-4 py-3 bg-green-600 hover:bg-green-700 text-sm font-medium mt-3 cursor-pointer text-white rounded-lg shadow-lg disabled:opacity-50 disabled:cursor-not-allowed ${className}`
         }`}
         disabled={loading}
         

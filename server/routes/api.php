@@ -5,7 +5,10 @@ use App\Http\Controllers\Api\GenderController;
 
 Route::controller(GenderController::class)->prefix('/gender')->group(function () {
     Route::get('/loadGenders', 'loadGenders'); // /gender/loadGenders
+    Route::get('/getGender/{genderId}', 'getGender');
     Route::post('/storeGender', 'storeGender'); // /gender/storeGender
+    Route::put('/updateGender/{gender}', 'updateGender');
+    Route::put('/destroyGender/{gender}', 'destroyGender');
 });
 
 

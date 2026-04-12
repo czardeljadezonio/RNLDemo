@@ -4,9 +4,12 @@ import GenderList from "./components/GenderList";
 import ToastMessage from "../../components/ToastMessage/ToastMessage";
 import { useToastMessage } from "../../hooks/useToastMessage";
 import { useRefresh } from "../../hooks/useRefresh";
+import { useLocation } from "react-router-dom";
 
 
 const GenderMainPage = () => {
+  const location = useLocation()
+
   const {
     message: toastMessage, 
     isVisible: toastMessageIsVisible, 
@@ -19,6 +22,15 @@ const GenderMainPage = () => {
     useEffect(() => {
         document.title = 'Gender Main Page';
     }, []);
+
+  useEffect(() => {
+    if (location.state?.message) {
+      showToastMessage(location.state.message);
+      handleRefresh();
+      window.history.replaceState({}, document.title); 
+    }
+  }, [location.state, showToastMessage]);
+  
   return (
     <>
     <ToastMessage 
