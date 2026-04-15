@@ -50,7 +50,8 @@ const handleStoreUser = async (e: FormEvent) => {
     }
     const res = await UserService.storeUser(payload)
     if(res.status === 200) {
-      onUserAdded(res.data.message)
+      onUserAdded(res.data.message);
+
       setFirstName('')
       setMiddleName('')
       setLastName('')
@@ -61,6 +62,8 @@ const handleStoreUser = async (e: FormEvent) => {
       setPassword('')
       setPasswordConfirmation('')
       setErrors({})
+
+      handleLoadGenders();
     } else {
       console.error('Unexpected status error occured during adding user: ', res.status)
     }
@@ -96,8 +99,10 @@ const handleStoreUser = async (e: FormEvent) => {
   };
 
   useEffect(() => {
-    handleLoadGenders();
-  }, [])
+    if(isOpen) {
+      handleLoadGenders();
+    }
+  }, [isOpen]);
 
   return (
     <>
@@ -163,12 +168,17 @@ const handleStoreUser = async (e: FormEvent) => {
                 errors={errors.gender}
                 required 
                 >
-                  <option value="">Select Gender</option>
                   {loadingGenders ? (
                     <option value="">Loading..</option>
-                  ) : genders.map((gender, index) => (
-                    <option value={gender.gender_id} key={index}>{gender.gender}</option>
-                  ))}
+                  ) : (
+                    <>
+                     <option value="">Select Gender</option>
+                      {genders.map((gender, index) => (
+                         <option value={gender.gender_id} key={index}>{gender.gender}</option>
+                       ))}                 
+                    </>
+
+                )}
                 </FloatingLabelSelect>
               </div>
             </div>
