@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\GenderController;
+use App\Http\Controllers\Api\UserController;
 
 Route::controller(GenderController::class)->prefix('/gender')->group(function () {
     Route::get('/loadGenders', 'loadGenders'); // /gender/loadGenders
@@ -9,6 +10,10 @@ Route::controller(GenderController::class)->prefix('/gender')->group(function ()
     Route::post('/storeGender', 'storeGender'); // /gender/storeGender
     Route::put('/updateGender/{gender}', 'updateGender');
     Route::put('/destroyGender/{gender}', 'destroyGender');
+});
+
+Route::controller(UserController::class)->prefix('/user')->group(function() {
+    Route::post('/storeUser', 'storeUser');
 });
 
 

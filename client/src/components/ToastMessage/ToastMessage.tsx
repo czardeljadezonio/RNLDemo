@@ -26,7 +26,7 @@ const ToastMessage: FC<ToastMessageProps> = ({
   return (
     <>
       <div
-        className={`fixed top-40 right-0 md:right-4 z-50 flex items-center w-full max-w-xs p-4 mb-4 text-black bg-green-100 rounded-lg shadow-lg transition-opacity duration-300 ${isVisible ? "opacity-100" : "opacity-0 pointer-events-none"}`}role="alert">
+        className={`fixed top-40 right-0 md:right-4 z-999999 flex items-center w-full max-w-xs p-4 mb-4 text-black bg-green-100 rounded-lg shadow-lg transition-opacity duration-300 ${isVisible ? "opacity-100" : "opacity-0 pointer-events-none"}`}role="alert">
         <div
           className={`inline-flex items-center justify-center shrink-0 w-8 h-8 ${isVisible ? "text-green-500 bg-green-200" : "text-green-500 bg-green-200"} rounded-lg transition-transform duration-300 ${
             isVisible ? "translate-y-0" : "-translate-y-10"}`}>
