@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import type { UserColumns } from "../interface/UserColumns";
+import type { UserColumns } from "../interface/UserInterface";
 
 export const useModal = (initialState: boolean) => {
   const [isOpen, setIsOpen] = useState(initialState);

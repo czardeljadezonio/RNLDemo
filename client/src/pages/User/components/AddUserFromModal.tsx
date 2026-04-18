@@ -4,10 +4,10 @@ import FloatingLabelInput from "../../../components/input/FloatingLabelInput";
 import Modal from "../../../components/Modal";
 import FloatingLabelSelect from "../../../components/select/FloatingLabelSelect";
 import { useEffect, useState, type FC, type FormEvent } from "react";
-import type { GenderColumns } from "../../../interface/GenderColumns";
 import GenderService from "../../../services/GenderService";
-import type { UserFieldErrors } from "../../../interface/UserFieldErrors";
 import UserService from "../../../services/UserService";
+import type { UserFieldErrors } from "../../../interface/UserInterface";
+import type { GenderColumns } from "../../../interface/GenderInterface";
 
 interface AddUserFormModalProps {
   onUserAdded: (message: string) => void
@@ -192,7 +192,9 @@ const handleStoreUser = async (e: FormEvent) => {
                     name="birth_date"
                     value={birthDate}
                     onChange={(e) => setBirthDate(e.target.value)} 
-                    required />
+                    required
+                    error={errors.birth_date}
+                     />
                 </div>
                 <div className="mb-4">
                     <FloatingLabelInput 

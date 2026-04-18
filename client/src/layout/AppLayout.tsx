@@ -1,35 +1,37 @@
-import AppSideBar from "./AppSidebar"
-import AppHeader from "./AppHeader"
-import { Outlet } from "react-router-dom"
-import { SidebarProvider, useSidebar } from "../context/SidebarContext"
-import { HeaderProvider } from "../context/HeaderContext"
+import { Outlet } from "react-router-dom";
+import AppHeader from "./AppHeader";
+import AppSidebar from "./AppSidebar";
+import { SidebarProvider } from "../context/SidebarContext";
+import { HeaderProvider } from "../context/HeaderContext";
 
 const LayoutContent = () => {
-    const { isOpen } = useSidebar();
     return (
-        <div className="flex flex-col min-h-screen bg-neutral-primary-soft">
-            <AppHeader />
-            <div className="flex flex-1 pt-16">
-                <AppSideBar />
-                <main className={`flex-1 transition-all duration-300 p-8 ${isOpen ? 'sm:ml-64' : 'sm:ml-0'}`}>
-                    <Outlet />
-                </main>
+        <>
+            <div>
+                <AppSidebar />
             </div>
-        </div>
-    )
-}
+            <div>
+                <AppHeader />
+            </div>
+            <div className="pt-20 pl-0 sm:pl-64 min-h-screen">
+                <div className="p-4 sm:p-6">
+                    <Outlet />
+                </div>
+            </div>
+        </>
+    );
+};
 
 const AppLayout = () => {
-  return (
-    <>
-    <HeaderProvider>
-        <SidebarProvider>
-            <LayoutContent /> 
-        </SidebarProvider>        
-    </HeaderProvider>
+    return (
+        <>
+            <HeaderProvider>
+                <SidebarProvider>
+                    <LayoutContent />
+                </SidebarProvider>
+            </HeaderProvider>
+        </>
+    );
+};
 
-    </>
-  )
-}
-
-export default AppLayout
+export default AppLayout;

@@ -4,11 +4,10 @@ import SubmitButton from "../../../components/Button/SubmitButton"
 import FloatingLabelInput from "../../../components/input/FloatingLabelInput"
 import Modal from "../../../components/Modal"
 import FloatingLabelSelect from "../../../components/select/FloatingLabelSelect"
-import type { UserColumns } from "../../../interface/UserColumns"
-import type { GenderColumns } from "../../../interface/GenderColumns"
-import type { UserFieldErrors } from "../../../interface/UserFieldErrors"
 import GenderService from "../../../services/GenderService"
 import UserService from "../../../services/UserService"
+import type { UserColumns, UserFieldErrors } from "../../../interface/UserInterface"
+import type { GenderColumns } from "../../../interface/GenderInterface"
 
 interface EditUserModalProps {
     user: UserColumns | null
@@ -113,6 +112,7 @@ const EditUserFormModal: FC<EditUserModalProps> = ({
   }, [isOpen]);
 
     useEffect(() => {
+      if(isOpen) {
         if(user) {
             setFirstName(user.first_name);
             setMiddleName(user.middle_name ?? '');
@@ -122,9 +122,11 @@ const EditUserFormModal: FC<EditUserModalProps> = ({
             setBirthDate(user.birth_date);
             setUsername(user.username);
         } else if (user !== null) {
-            console.error('Unexpected user error occured during getting user details: ', user)
+            console.error('Unexpected user error occured during getting user details: ', 
+            user);
         }
-    }, [user]);
+      }
+    }, [isOpen, user]);
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose} showCloseButton>

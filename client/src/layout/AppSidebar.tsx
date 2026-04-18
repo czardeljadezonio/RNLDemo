@@ -10,7 +10,7 @@ const appSideBar = () => {
       },
       {
          path: '/users',
-         text: 'User List',
+         text: 'Users',
       },
    ]
   return (
