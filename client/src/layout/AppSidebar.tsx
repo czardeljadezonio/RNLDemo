@@ -5,7 +5,7 @@ const appSideBar = () => {
    const {isOpen, toggleSidebar} = useSidebar()
    const sidebarItems = [
       {
-         path: '/',
+         path: 'genders',
          text: 'Genders',
       },
       {
