@@ -6,7 +6,7 @@ import { useAuth } from "../../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 interface loginFormProps {
-  message: (message: string) => void
+  message: (message: string, isFailed: boolean) => void
 }
 
 
@@ -19,7 +19,7 @@ const LoginForm: FC<loginFormProps> = ({message}) => {
   const {login} = useAuth()
   const navigate = useNavigate()
 
-  const handLoLogin = async (e: FormEvent) => {
+  const handleLogin = async (e: FormEvent) => {
     try {
       e.preventDefault()
 
@@ -30,7 +30,7 @@ const LoginForm: FC<loginFormProps> = ({message}) => {
     } catch(error: any) {
       if(error.response && error.response.status === 401) {
         setErrors({})
-        message(error.response.data.message)
+        message(error.response.data.message, true)
       } else if(error.response && error.response.status === 422) {
         setErrors(error.response.data.errors)
       } else {
@@ -43,7 +43,7 @@ const LoginForm: FC<loginFormProps> = ({message}) => {
 
   return (
     <>
-      <form onSubmit={handLoLogin}>
+      <form onSubmit={handleLogin}>
         <div className="mb-4">
           <FloatingLabelInput
             label="Username"

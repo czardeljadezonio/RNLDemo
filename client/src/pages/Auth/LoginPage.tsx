@@ -5,11 +5,18 @@ import LoginForm from "./components/LoginForm";
 
 
 const LoginPage = () => {
-    const {message, isVisible, showToastMessage, closeToastMessage} = useToastMessage('', false)
+    const {message, isFailed, isVisible, showToastMessage, closeToastMessage} = 
+        useToastMessage("", false, false)
+
     return (
         <>
             <AuthPageLayout>
-                <ToastMessage message={message} isVisible={isVisible} onClose={closeToastMessage} />
+                <ToastMessage 
+                    message={message} 
+                    isFailed={isFailed} 
+                    isVisible={isVisible} 
+                    onClose={closeToastMessage} 
+                />
                 <LoginForm message={showToastMessage} />
             </AuthPageLayout>
         </>

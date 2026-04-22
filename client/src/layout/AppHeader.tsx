@@ -1,10 +1,54 @@
 import { useSidebar } from "../context/SidebarContext";
 import { useHeader } from "../context/HeaderContext";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { useEffect, useState, type FormEvent } from "react";
 
 const AppHeader = () => {
     const {isOpen, toggleUserMenu} = useHeader()
     const { toggleSidebar } = useSidebar();
+    const { user, logout } = useAuth();
+    const navigate = useNavigate();
+
+    const [isLoading, setIsLoading] = useState(false)
+
+    const handleLogout = async (e: FormEvent) => {
+        try {
+            e.preventDefault()
+            setIsLoading(true)
+            await logout()
+            navigate('/')
+        } catch(error) {
+            console.error(
+                "Unexpected server error occured during logging user out: ", 
+                error
+            );
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+    const handleUserNameFormat = () => {
+        if (!user) return ''
+
+        let fullName = `${user.user.last_name}, ${user.user.first_name}`
+
+        if(user.user.middle_name) {
+            fullName += `${user.user.middle_name.charAt(0)}`
+        }
+
+        if(user.user.suffix_name) {
+            fullName += `${user.user.suffix_name}`
+        }
+
+        return fullName
+    }
+    useEffect(() => {
+        if(user) {
+            handleUserNameFormat()
+        }
+    }, [user]);
+
     return (
         <>
         {isOpen && (
@@ -48,15 +92,12 @@ const AppHeader = () => {
                                     id="dropdown-user">
                                     <div className="px-4 py-3 border-b border-default-medium" role="none">
                                         <p className="text-sm font-medium text-heading text-white" role="none">
-                                            Neil Sims
-                                        </p>
-                                        <p className="text-sm text-body truncate text-white" role="none">
-                                            neil.sims@flowbite.com
+                                            {handleUserNameFormat()}
                                         </p>
                                     </div>
                                     <ul className="p-2 text-sm text-body text-white font-medium" role="none">
                                         <li>
-                                          <Link to="#" className="inline-flex items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">Sign out</Link>
+                                          <button type="submit" onClick={handleLogout} disabled={isLoading} className="inline-flex cursor-pointer disabled:cursor-not-allowed items-center w-full p-2 hover:bg-neutral-tertiary-medium hover:text-heading rounded">{isLoading ? 'Signing Out...' : 'Sign Out'}</button>
                                         </li>
                                     </ul>
                                 </div>

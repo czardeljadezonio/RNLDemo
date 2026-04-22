@@ -75,7 +75,10 @@ export const AuthProvider: FC<{children: ReactNode}> = ({children}) => {
             error
           );
         }
+
+        setLoading(false);
       } else {
+        setLoading(false);
         setUser(null);
       }
     };

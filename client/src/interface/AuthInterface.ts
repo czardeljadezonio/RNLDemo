@@ -6,9 +6,8 @@ export interface UserDetails {
     last_name: string;
     suffix_name?: string;
     gender: {
-      gender_id: number;
-      gender: string;
-    };
+    gender_id: number;
+    gender: string;};
     birth_date: string;
     age: string | number;
     username: string;

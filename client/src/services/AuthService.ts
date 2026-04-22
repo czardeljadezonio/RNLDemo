@@ -3,15 +3,15 @@ import AxiosInstance from "./AxiosIntance"
 const AuthService = {
     login: async (data: any) => {
         try {
-            const response = await AxiosInstance.post('/auth/login', data)
+            const response = await AxiosInstance.post("/auth/login", data)
             return response
         } catch(error) {
-            throw error
+            throw error;
         }
     },
     logout: async () => {
         try {
-            const response = await AxiosInstance.post('/auth/logout')
+            const response = await AxiosInstance.post("/auth/logout")
             return response
         } catch(error) {
             throw error
@@ -19,7 +19,7 @@ const AuthService = {
     },
     me: async () => {
         try {
-            const response = await AxiosInstance.get('auth/me')
+            const response = await AxiosInstance.get("/auth/me")
             return response;
         } catch(error) {
             throw error;
