@@ -31,17 +31,17 @@ const AppHeader = () => {
     const handleUserNameFormat = () => {
         if (!user) return ''
 
-        let fullName = `${user.user.last_name}, ${user.user.first_name}`
+        let fullName = `${user.user.last_name}, ${user.user.first_name}`;
 
         if(user.user.middle_name) {
-            fullName += `${user.user.middle_name.charAt(0)}`
+            fullName += `${user.user.middle_name.charAt(0)}, `;
         }
 
         if(user.user.suffix_name) {
-            fullName += `${user.user.suffix_name}`
+            fullName += `${user.user.suffix_name}`;
         }
 
-        return fullName
+        return fullName;
     }
     useEffect(() => {
         if(user) {
