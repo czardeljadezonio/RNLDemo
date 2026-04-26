@@ -3,7 +3,8 @@ import { useCallback, useEffect, useRef, useState, type FC } from "react";
 import UserService from "../../../services/UserService";
 import Spinner from "../../../components/Spinner/Spinner";
 import type { UserColumns } from "../../../interface/UserInterface";
-
+import FloatingLabelInput from "../../../components/input/FloatingLabelInput";
+ 
 interface UserListProps {
     onAddUser: () => void;
     onEditUser: (user: UserColumns | null) => void
@@ -17,20 +18,23 @@ const UserList: FC<UserListProps> = ({ onAddUser, onEditUser, onDeleteUser, refr
   const [usersTableCurrentPage, setUsersTableCurrentPage] = useState(1)
   const [usersTableLastPage, setUsersTableLastPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
+  
+  const [search, setSearch] = useState("")
+  const [debouncedSearch, setDebouncedSearch] = useState('')
 
   const tableRef = useRef<HTMLDivElement>(null);
 
-  const handleLoadUsers = async (page: number, append = false) => {
+  const handleLoadUsers = async (page: number, append = false, search: string) => {
     try {
       setLoadingUsers(true)
 
-      const res = await UserService.loadUsers(page);
+      const res = await UserService.loadUsers(page, search);
 
       if(res.status === 200) {
         const usersData = res.data.users.data || res.data.users || []
         const lastPage = res.data.users.last_page || res.data.last_page || usersTableLastPage || 1
 
-        setUsers(append ? [...users, ...usersData] : usersData);
+        setUsers((prevUsers) => (append ? [...prevUsers, ...usersData] : usersData));
         setUsersTableCurrentPage(page)
         setUsersTableLastPage(lastPage)
         setHasMore(page < lastPage)
@@ -50,9 +54,9 @@ const UserList: FC<UserListProps> = ({ onAddUser, onEditUser, onDeleteUser, refr
     const ref = tableRef.current
 
     if(ref && ref.scrollTop + ref.clientHeight >= ref.scrollHeight - 10 && hasMore && !loadingUsers) {
-      handleLoadUsers(usersTableCurrentPage + 1, true);
+      handleLoadUsers(usersTableCurrentPage + 1, true, debouncedSearch);
     }
-  }, [hasMore, loadingUsers, usersTableCurrentPage]);
+  }, [hasMore, loadingUsers, usersTableCurrentPage, debouncedSearch]);
 
   const handleUserFullNameFormat = (user: UserColumns) => {
     let fullName = ''
@@ -82,9 +86,20 @@ const UserList: FC<UserListProps> = ({ onAddUser, onEditUser, onDeleteUser, refr
     };
   }, [handleScroll])
 
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        setDebouncedSearch(search)
+      }, 800);
+      return () => clearTimeout(timer);
+    }, [search]);
+
   useEffect(() => {
-    handleLoadUsers(usersTableCurrentPage, false);
-  }, [refreshKey]);
+    setUsers([])
+    setUsersTableCurrentPage(1)
+    setHasMore(true)
+    
+    handleLoadUsers(1, false, debouncedSearch);
+  }, [refreshKey, debouncedSearch]);
  
   return (
     <>
@@ -93,7 +108,10 @@ const UserList: FC<UserListProps> = ({ onAddUser, onEditUser, onDeleteUser, refr
           <Table>
             <caption className="mb-4">
                 <div className="border-b border-gray-100">
-                    <div className="p-4 flex justify-end">
+                    <div className="p-4 flex justify-between">
+                      <div className="w-64">
+                        <FloatingLabelInput label="Search" type="text" name="search" value={search} onChange={(e) => setSearch(e.target.value)} autoFocus />
+                      </div>
                         <button className="bg-blue-600 hover:bg-blue-700 cursor-pointer text-white font-medium py-2 px-4 rounded" onClick={onAddUser}>
                             Add User
                         </button>
@@ -172,12 +190,18 @@ const UserList: FC<UserListProps> = ({ onAddUser, onEditUser, onDeleteUser, refr
                   </TableRow>
                 ))
 
+              ) : !loadingUsers && (users.length ?? 0 ) <= 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="px-4 py-3 text-center font-medium">
+                    No Records Found
+                  </TableCell>
+                </TableRow>
               ) : (
                 <TableRow>
                   <TableCell colSpan={6} className="px-4 py-3 text-center">
                     <Spinner size="md" />
                   </TableCell>
-                </TableRow>
+                </TableRow>                
               )}
               {loadingUsers && (users.length ?? 0) > 0 && (
                 <TableRow>

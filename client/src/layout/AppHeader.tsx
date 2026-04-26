@@ -34,7 +34,7 @@ const AppHeader = () => {
         let fullName = `${user.user.last_name}, ${user.user.first_name}`;
 
         if(user.user.middle_name) {
-            fullName += `${user.user.middle_name.charAt(0)}, `;
+            fullName += ` ${user.user.middle_name.charAt(0)}, `;
         }
 
         if(user.user.suffix_name) {
