@@ -118,10 +118,11 @@ const UserList: FC<UserListProps> = ({ onAddUser, onEditUser, onDeleteUser, refr
                     </div>
                 </div>
             </caption>
-            <TableHeader className="border-b border-gray-200 bg-blue-600 text-white sticky top-0 text-xs">
+            <TableHeader className="border-b border-gray-200 bg-blue-600 text-white sticky top-0 text-xs z-10">
               <TableRow>
                 <TableCell
                   isHeader
+                  colSpan={2}
                   className="px-5 py-3 font-medium text-center"
                 >
                   No.
@@ -165,6 +166,17 @@ const UserList: FC<UserListProps> = ({ onAddUser, onEditUser, onDeleteUser, refr
                     <TableCell className="px-4 py-3 text-center">
                       {index + 1}
                     </TableCell>
+                    <TableCell className="py-3 items-end justify-end">
+                      {user.profile_picture ? (
+                        <img src={user.profile_picture} alt={handleUserFullNameFormat(user)} className="object-cover w-10 h-10 rounded-full" />
+                      ) : (
+                        <div className="relative inline-flex items-center justify-center w-10 h-10 text-center text-sm overflow-hidden bg-gray-300 rounded-full">
+                          <span className="font-medium text-gray-600">
+                            {`${user.last_name.charAt(0)}${user.first_name.charAt(0)}`}
+                          </span>
+                        </div>
+                      ) }
+                    </TableCell>
                     <TableCell className="px-4 py-3 text-start">
                       {handleUserFullNameFormat(user)}
                     </TableCell>
@@ -192,20 +204,20 @@ const UserList: FC<UserListProps> = ({ onAddUser, onEditUser, onDeleteUser, refr
 
               ) : !loadingUsers && (users.length ?? 0 ) <= 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="px-4 py-3 text-center font-medium">
+                  <TableCell colSpan={7} className="px-4 py-3 text-center font-medium">
                     No Records Found
                   </TableCell>
                 </TableRow>
               ) : (
                 <TableRow>
-                  <TableCell colSpan={6} className="px-4 py-3 text-center">
+                  <TableCell colSpan={7} className="px-4 py-3 text-center">
                     <Spinner size="md" />
                   </TableCell>
                 </TableRow>                
               )}
               {loadingUsers && (users.length ?? 0) > 0 && (
                 <TableRow>
-                  <TableCell colSpan={6} className="px-4 py-3 text-center">
+                  <TableCell colSpan={7} className="px-4 py-3 text-center">
                     <Spinner size="md" />
                   </TableCell>
                 </TableRow>

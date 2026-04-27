@@ -8,6 +8,7 @@ import GenderService from "../../../services/GenderService"
 import UserService from "../../../services/UserService"
 import type { UserColumns, UserFieldErrors } from "../../../interface/UserInterface"
 import type { GenderColumns } from "../../../interface/GenderInterface"
+import UploadInput from "../../../components/input/UploadInput"
 
 interface EditUserModalProps {
     user: UserColumns | null
@@ -28,6 +29,11 @@ const EditUserFormModal: FC<EditUserModalProps> = ({
     const[genders, setGenders] = useState<GenderColumns[]>([])
 
     const [loadingUpdate, setLoadingUpdate] = useState(false)
+    const [existingProfilePicture, setExistingProfilePicture] = useState<
+    string | null
+    >(null)
+    const [editUserProfilePicture, setEditUserProfilePicture] = 
+    useState<File | null>(null)
     const [firstName, setFirstName] = useState('')
     const [middleName, setMiddleName] = useState('')
     const [lastName, setLastName] = useState('')
@@ -42,21 +48,31 @@ const EditUserFormModal: FC<EditUserModalProps> = ({
         e.preventDefault()
 
         setLoadingUpdate(true)
-        const payload = {
-          first_name: firstName,
-          middle_name: middleName,
-          last_name: lastName,
-          suffix_name: suffixName,
-          gender: gender,
-          birth_date: birthDate,
-          username: username
-        };
+        
+          const formData = new FormData()
+          formData.append("_method", "PUT")
+
+          if(editUserProfilePicture) {
+            formData.append('edit_user_profile_picture', editUserProfilePicture)
+          } else if(!existingProfilePicture) {
+            formData.append('remove_profile_picture', '1');
+          }
+        
+          formData.append('first_name', firstName)
+          formData.append('middle_name', middleName || "")
+          formData.append('last_name', lastName);
+          formData.append('suffix_name', suffixName || "")
+          formData.append('gender', gender);
+          formData.append('birth_date', birthDate);
+          formData.append('username', username)
 
         
 
-        const res = await UserService.updateUser(user?.user_id!, payload )
+        const res = await UserService.updateUser(user?.user_id!, formData )
 
         if(res?.status === 200) {
+          setExistingProfilePicture(res.data.user.profile_picture ? res.data.user.profile_picture : null)
+          setEditUserProfilePicture(null);
           setFirstName(res.data.user.first_name);
           setMiddleName(res.data.user.middle_name ?? '');
           setLastName(res.data.user.last_name)
@@ -114,6 +130,12 @@ const EditUserFormModal: FC<EditUserModalProps> = ({
     useEffect(() => {
       if(isOpen) {
         if(user) {
+            setEditUserProfilePicture(null)
+
+            setExistingProfilePicture(
+              user.profile_picture ? user.profile_picture : null
+            );
+
             setFirstName(user.first_name);
             setMiddleName(user.middle_name ?? '');
             setLastName(user.last_name)
@@ -133,7 +155,12 @@ const EditUserFormModal: FC<EditUserModalProps> = ({
         <form onSubmit={handleUpdateUser}>
           <h1 className="text-2xl border-b border-gray-100 p-4 font-semibold mb-4">
             Edit User Form
-          </h1> 
+          </h1>
+          <div className="mb-4">
+          <UploadInput label="Profile Picture" name="edit_user_profile_picture" value={editUserProfilePicture} onChange={setEditUserProfilePicture} onRemoveExistingImageUrl={() => setExistingProfilePicture(null)} existingImageUrl={existingProfilePicture}
+          errors={errors.edit_user_profile_picture}
+           />
+          </div> 
 
           <div className="grid grid-cols-2 gap-4 border-b border-gray-100 mb-4">
             <div className="col-span-2 md:col-span-1">
